@@ -1,4 +1,5 @@
 "use client";
+
 import React, { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,29 +27,29 @@ import { usePathname, useRouter } from "next/navigation";
 interface Props {
   user: {
     id: string;
-    object: string;
+    objectId: string;
     username: string;
     name: string;
     bio: string;
     image: string;
   };
-
   btnTitle: string;
 }
 
 const AccountProfile = ({ user, btnTitle }: Props) => {
-  const [files, setFiles] = useState<File[]>([]);
-  const { startUpload } = useUploadThing("media");
   const router = useRouter();
   const pathname = usePathname();
+  const { startUpload } = useUploadThing("media");
 
-  const form = useForm({
+  const [files, setFiles] = useState<File[]>([]);
+
+  const form = useForm<z.infer<typeof UserValidation>>({
     resolver: zodResolver(UserValidation),
     defaultValues: {
-      profile_photo: user?.image || "",
-      name: user?.name || "",
-      username: user?.username || "",
-      bio: user?.bio || "",
+      profile_photo: user?.image ? user.image : "",
+      name: user?.name ? user.name : "",
+      username: user?.username ? user.username : "",
+      bio: user?.bio ? user.bio : "",
     },
   });
 
@@ -79,7 +80,6 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     const blob = values.profile_photo;
 
     const hasImageChanged = isBase64Image(blob);
-
     if (hasImageChanged) {
       const imgRes = await startUpload(files);
 
@@ -89,12 +89,12 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     }
 
     await updateUser({
-      userId: user.id,
-      username: values.username,
       name: values.name,
-      image: values.profile_photo,
-      bio: values.bio,
       path: pathname,
+      username: values.username,
+      userId: user.id,
+      bio: values.bio,
+      image: values.profile_photo,
     });
 
     if (pathname === "/profile/edit") {
@@ -209,9 +209,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                This is your bio.
-              </FormDescription>
+              <FormDescription>This is your bio.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

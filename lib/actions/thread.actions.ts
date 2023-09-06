@@ -1,9 +1,9 @@
 "use server";
 
-import { connectToDB } from "../mongoose";
 import Thread from "../models/thread.model";
 import User from "../models/user.model";
 import { revalidatePath } from "next/cache";
+import { connectToDB } from "../mongoose";
 
 interface Params {
     text: string,
@@ -21,7 +21,7 @@ export async function createThread({ text, author, communityId, path }: Params) 
         const createThread = await Thread.create({
             text,
             author,
-            communityId: null,
+            community: null,
         });
 
         // Update user model
@@ -63,4 +63,6 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
     const isNext = totalPostsCount > skipAmount + posts.length;
 
     return {posts, isNext}
+
+    
 }

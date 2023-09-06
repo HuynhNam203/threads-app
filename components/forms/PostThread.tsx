@@ -21,18 +21,18 @@ import { usePathname, useRouter } from "next/navigation";
 import { ThreadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.actions";
 
-interface Props {
-    userId: string;
-  }
+// interface Props {
+//     userId: string;
+//   }
 
-function PostThread({ userId }: Props) {
+function PostThread({ userId }: {userId: string}) {
   const router = useRouter();
   const pathname = usePathname();
 
   const form = useForm({
     resolver: zodResolver(ThreadValidation),
     defaultValues: {
-      thread: "",
+      thread: '',
       accountId: userId,
     },
   });
