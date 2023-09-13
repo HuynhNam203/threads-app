@@ -20,7 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import * as z from "zod";
 import { Textarea } from "../ui/textarea";
-import { useUploadThing } from "@/lib/validations/uploadthing";
+import { useUploadThing } from "@/lib/uploadthing";
 import { updateUser } from "@/lib/actions/user.actions";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -83,8 +83,8 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     if (hasImageChanged) {
       const imgRes = await startUpload(files);
 
-      if (imgRes && imgRes[0].fileUrl) {
-        values.profile_photo = imgRes[0].fileUrl;
+      if (imgRes && imgRes[0].url) {
+        values.profile_photo = imgRes[0].url;
       }
     }
 
@@ -137,7 +137,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
               <FormControl className="flex-1 text-base-semibold text-gray-200">
                 <Input
                   type="file"
-                  accept="image/"
+                  accept="image/*"
                   placeholder="Upload a photo"
                   className="account-form_image-input"
                   onChange={(e) => handleImage(e, field.onChange)}

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { sidebarLinks } from "@/constants";
 import Link from "next/link";
@@ -7,8 +7,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 
 function Bottombar() {
-
-    const pathname = usePathname();
+  const pathname = usePathname();
 
   return (
     <section className="bottombar">
@@ -27,11 +26,13 @@ function Bottombar() {
               <Image
                 src={link.imgURL}
                 alt={link.label}
-                width={24}
-                height={24}
+                width={16}
+                height={16}
               />
 
-              <p className="text-subtle-medium text-light-1 max-sm:hidden">{link.label.split(/\s+./)[0]}</p>
+              <p className="text-subtle-medium text-light-1 max-sm:hidden">
+                {link.label.split(/\s+/)[0]}
+              </p>
             </Link>
           );
         })}
