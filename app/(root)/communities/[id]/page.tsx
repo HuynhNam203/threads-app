@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { currentUser } from "@clerk/nextjs";
+
 import { communityTabs } from "@/constants";
 
 import UserCard from "@/components/cards/UserCard";
@@ -43,6 +44,7 @@ async function Page({ params }: { params: { id: string } }) {
 
                 {tab.label === "Threads" && (
                   <p className='ml-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2'>
+                    {communityDetails.threads.length}
                   </p>
                 )}
               </TabsTrigger>
@@ -60,7 +62,7 @@ async function Page({ params }: { params: { id: string } }) {
 
           <TabsContent value='members' className='mt-9 w-full text-light-1'>
             <section className='mt-9 flex flex-col gap-10'>
-              {communityDetails?.members.map((member: any) => (
+              {communityDetails.members.map((member: any) => (
                 <UserCard
                   key={member.id}
                   id={member.id}
