@@ -1,55 +1,52 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 interface Props {
-  pageNumber: number;
-  isNext: boolean;
-  path: string;
+  routeType: string;
 }
 
-function Pagination({ pageNumber, isNext, path }: Props) {
+function Searchbar({ routeType }: Props) {
   const router = useRouter();
+  const [search, setSearch] = useState("");
 
-  const handleNavigation = (type: string) => {
-    let nextPageNumber = pageNumber;
+  // query after 0.3s of no input
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (search) {
+        router.push(`/${routeType}?q=` + search);
+      } else {
+        router.push(`/${routeType}`);
+      }
+    }, 300);
 
-    if (type === "prev") {
-      nextPageNumber = Math.max(1, pageNumber - 1);
-    } else if (type === "next") {
-      nextPageNumber = pageNumber + 1;
-    }
-
-    if (nextPageNumber > 1) {
-      router.push(`/${path}?page=${nextPageNumber}`);
-    } else {
-      router.push(`/${path}`);
-    }
-  };
-
-  if (!isNext && pageNumber === 1) return null;
+    return () => clearTimeout(delayDebounceFn);
+  }, [search, routeType]);
 
   return (
-    <div className='pagination'>
-      <Button
-        onClick={() => handleNavigation("prev")}
-        disabled={pageNumber === 1}
-        className='!text-small-regular text-light-2'
-      >
-        Prev
-      </Button>
-      <p className='text-small-semibold text-light-1'>{pageNumber}</p>
-      <Button
-        onClick={() => handleNavigation("next")}
-        disabled={!isNext}
-        className='!text-small-regular text-light-2'
-      >
-        Next
-      </Button>
+    <div className='searchbar'>
+      <Image
+        src='/assets/search-gray.svg'
+        alt='search'
+        width={24}
+        height={24}
+        className='object-contain'
+      />
+      <Input
+        id='text'
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder={`${
+          routeType !== "/search" ? "Search communities" : "Search creators"
+        }`}
+        className='no-focus searchbar_input'
+      />
     </div>
   );
 }
 
-export default Pagination;
+export default Searchbar;
